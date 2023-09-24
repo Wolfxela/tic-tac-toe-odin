@@ -18,6 +18,57 @@ const playermaker = function(inputPlayerName)
 }
 
 
+const ai = function(inputrobotName)
+{
+    let robotName = inputrobotName
+    let sign = ""
+    const getPlayerName = function(){return robotName}
+    const {getSign} = playermaker("ai")
+    const {setSign} = playermaker("ai")
+    const getInputOnBoard = function(currentBoard)
+    {
+        let tempBoard = [...currentBoard]
+        let answer = 0;
+        
+        for(let i = 0; i < tempBoard.length;i++)
+        {
+            
+            let tempBoard = [...currentBoard]
+              //if it finds out that he can win, he will place it on that spot
+            if(tempBoard[i] != "X" && tempBoard[i] != "O")
+            {
+                tempBoard[i] = "O"
+            }
+            if(gameBoard.checkBoard(tempBoard) == true)
+            {
+                return i + 1
+            }
+            //if it finds that the player can win if he chooses a spot, it will place it in that spot if he can't win this turn
+            if(tempBoard[i] != "X" && tempBoard[i] != "O")
+            {
+                tempBoard[i] = "X"
+            }
+            if(gameBoard.checkBoard(tempBoard) == true)
+            {
+                return i + 1
+            }
+        }
+        //if he can't win and there's no threat of losing, randomly choose an empty spot(possibly change later to make it smarter and have strategies)
+        for(let i = 0; i < tempBoard.length;i++)
+        {
+            answer = Math.floor(Math.random() * 9)+1
+            if(currentBoard[answer -1] != "X" && currentBoard[answer -1] != "O")
+            {
+                return answer
+            }
+        }
+    }
+
+    return{getInputOnBoard,getSign,setSign,getPlayerName}
+
+}
+
+
 
 const scoreBoard = (function()
 {
@@ -34,7 +85,7 @@ const scoreBoard = (function()
             players[0].setSign("X")
             
         }
-        if(players.length >= 2)
+        else if(players.length >= 2)
         {
            
             players[1].setSign("O")
@@ -70,8 +121,12 @@ const scoreBoard = (function()
         //to be edited later
         console.log(player.getPlayerName()+ "won!")
     }
+    const aiInput = function(board)
+    {
+       return players[1].getInputOnBoard(board)
+    }
     
-    return{addPlayer,setPlayerScore}
+    return{addPlayer,setPlayerScore,aiInput}
 
 
 })();
@@ -79,6 +134,7 @@ const scoreBoard = (function()
 const gameBoard = (function()
 {
     let tempNum = 0;
+    let turns = 0;
     const board = ["","","","","","","","",""];
     //the arrays are -1 because of index, first one would be 1 2 3 but is instead 0 1 2
     const winningLines = [
@@ -91,54 +147,84 @@ const gameBoard = (function()
         [6,4,2],
         [6,7,8]
     ]
-
+    
     const placeMark = function(Spot)
     {
         placeSpot = Spot -1
+       
     
         if(tempNum == 0 && board[placeSpot] == "")
         {
+
             board[placeSpot] = "X"
             tempNum += 1
-            if(checkBoard() == true)
+            turns += 1;
+            
+            if(checkBoard(board) == true)
             {
                 scoreBoard.setPlayerScore("X")
+               
+                
             }
+            else
+            {
+                placeMark(scoreBoard.aiInput(board))
+            }
+
         }
         else if(tempNum != 0 && board[placeSpot] == "")
         {
             board[placeSpot] = "O"
             tempNum = 0
-            if(checkBoard() == true)
+            turns += 1;
+            if(checkBoard(board) == true)
             {
                 scoreBoard.setPlayerScore("O")
+               
             }
         }
 
+        if(turns == 10)
+        {
+            clearBoard();
+        }
+        
+
        
     }
-    const checkBoard = function()
+    const checkBoard = function(inputBoard)
     {
 
         for(let i = 0; i < winningLines.length; i++)
         {
-            if(board[winningLines[i][0]] != "" && board[winningLines[i][0]] == board[winningLines[i][1]] && board[winningLines[i][0]] == board[winningLines[i][2]])
-        {
-            return true
-        }
+            if(inputBoard[winningLines[i][0]] != ""
+                        &&
+               inputBoard[winningLines[i][0]] == inputBoard[winningLines[i][1]]
+                        &&
+               inputBoard[winningLines[i][0]] == inputBoard[winningLines[i][2]]
+               )
+            {
+                clearBoard(inputBoard);
+                return true
+            }
         }
     }
+    const clearBoard = function(inputBoard)
+    {
 
-    return{placeMark}
+        for(let i = 0; i < inputBoard.length;i++)
+        {
+            inputBoard[i] = "";
+        }
+
+    }
+
+    return{placeMark,checkBoard}
 
 })();
 scoreBoard.addPlayer(playermaker("bob"))
-scoreBoard.addPlayer(playermaker("bill"))
+scoreBoard.addPlayer(ai("bill"))
 //testing
-gameBoard.placeMark(9)
-gameBoard.placeMark(1)
-gameBoard.placeMark(8)
-gameBoard.placeMark(2)
 gameBoard.placeMark(6)
-gameBoard.placeMark(3)
+
 
