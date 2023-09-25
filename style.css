@@ -1,0 +1,101 @@
+html,body
+{
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+}
+
+body
+{
+    background-color: aqua;
+}
+.gameBody
+{
+    background: linear-gradient(to bottom right,black 52.7%, #BF00FF 50%);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+}
+.scores
+{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    gap: 60px;
+    justify-content: center;
+    align-items: center;
+}
+.board
+{
+    flex-grow: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.name, .scoreBox
+{
+    width: 30vw;
+    height: 5vh;
+    font-size: 2vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+.name
+{
+    border-radius: 10px;
+    background-color: aliceblue;
+}
+.playerScore,.aiScore,.VS
+{
+    font-size: 2vw;
+    border-color: gold;
+    border-width: 1px;
+    border-style: solid;
+    height: 100%;
+    flex-grow: 1;
+    background-color: aliceblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.boardContent
+{
+    background: linear-gradient(to top left,black, #BF00FF);
+    border-radius: 5px;
+    width: 60vw;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.graphicBoardContent
+{
+    background: linear-gradient(to bottom right,black 50%, #BF00FF 50%);
+    width: 99%;
+    height: 99%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 1px;
+
+}
+.box
+{
+    border-width: 1px;
+    border-style: solid;
+    background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15vh;
+}
+.box:hover
+{
+border-color: gold;
+
+}
